@@ -1,0 +1,15 @@
+(1) User login or sign-up button - simple with some information 
+(2) Only those users would be allowed who are registered in Shailendra Database
+(3) Now after login - a dasboard will come
+    --> It can be on room basis or place basis - like office or room_1
+    --> user can select it from the side menu - just like we have done for the tailoring app. 
+    --> According to selection, different button created for different devices will come 
+(4) Now once, a switch is pressed - end point related to the button would be called - POST data for that specific form
+(5) Now on the server side, when we are calling a end point, it need to return a  value and generally, we redirect the same page. 
+(6) but now when we redirect the page, new page load and every button is set to the orignal state. Now there are two ways to solve this
+    --> One is that you store the state in the session variables. And when redirect the page, load the previous values from the browser. And every
+        time, you push some data i.e. a button is pressed, you redirect the page and load the previous values from the broswer cookies. 
+    --> Other way is that you don't at all use form, use JS / Ajax calls in the page to push data to cloud. and when you referesh page, do AJAX calls        to get the present state from the server. 
+    --> Other way arond is that you post data, load the page again and while loading the page, call a end point, which will get each and every value         from the server and put in on the page using Jinja2 .
+(7) one problem is that if some one manually pressed the button locally on, we need to update the server. For that, you need to do hardware programming. When wver any command to turn on /off any button, update a value in some text file. And after every "x" secdons read the value and see if the state is changed from the previous one. If yes, then update the server. 
+ 

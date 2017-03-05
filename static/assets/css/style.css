@@ -1,0 +1,64 @@
+.pad-elements{
+  margin-top: 50px;
+}
+
+a{
+  text-decoration: none;
+}
+
+.titles-grid-background{
+  background:rgb(0, 180, 250);
+}
+
+.img1 {
+  width: 100px;
+  height: 50px;
+}
+
+.demo-card-wide.mdl-card {
+  width: 320px;
+  height: 400px;
+}
+
+.cards-backgroung {
+  justify-content: center;
+  height:200px;
+  width: 320px;
+}
+
+.center{
+  justify-content: center;
+}
+
+.features-card {
+  width: 100%;
+  min-height: 100%;
+}
+
+.airquality-slider-wrapper {
+  width: 80%;
+  margin: 100px auto;
+}
+
+.mdl-data-table {
+  table-layout:fixed;
+  width:100%;
+ border: none;
+}
+
+/* unrelated to responsive table css */
+.mdl-data-table th, td{
+  text-align: left !important;
+}
+
+.table-bgcolor{
+ background:  #d9edf7;
+}
+
+.squre-card-airquality.mdl-card {
+  width: 100%;
+  height: 350px;
+}
+
+
+

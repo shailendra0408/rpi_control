@@ -1,0 +1,14 @@
+.demo-card-wide-yuktix{
+    margin:45px;
+}
+.yuktix-mdl-cel--6-col-padding{
+    padding:5px;
+}
+.mdl-layout {
+	align-items: center;
+  justify-content: center;
+}
+.mdl-layout__content {
+	padding: 24px;
+	flex: none;
+}

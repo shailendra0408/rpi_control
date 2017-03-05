@@ -1,0 +1,25 @@
+  <div class=" mdlcel3-margin-tapp demo-card-wide mdl-card mdl-shadow--2dp">
+
+    <div class="mdl-card__title">
+      <h2 class="mdl-card__title-text">Fan</h2>
+    </div>
+    <div align="center"><div class="mdl-card__supporting-text">
+      <i class="material-icons" style="font-size: 48px; color:#3352FF;">devices</i></div> <br>
+    </div>
+
+    <div class="mdl-card__actions mdl-card--border">
+      <div align="center">
+
+        <form name="toggleForm1" action="/toggle" method="POST">
+          <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1-fan">
+            <input type="radio" id="option-1-fan" class="mdl-radio__button" name="fan-1" onClick="send()" value="1" checked>
+            <span class="mdl-radio__label">ON</span>
+          </label>
+          <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2-fan">
+            <input type="radio" id="option-2-fan" class="mdl-radio__button" name="fan-1" onClick="send()" value="2">
+            <span class="mdl-radio__label">OFF</span>
+          </label>
+        </form>
+      </div>
+    </div>
+  </div>
