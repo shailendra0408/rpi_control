@@ -34,38 +34,47 @@ def tubelightstate():
 
 @application.route('/fanstate',methods = ['GET','POST'])
 def fanstate():
-    if request.method == 'POST': 
+    if request.method == 'POST':
+        global fan_state_1
+        first_name="Shailendra"
         fan_state_1 = request.form['toggle1']
         print fan_state_1
         if fan_state_1 == 'on':
             print "turning fan on"
+            save_fan_state(fan_state_1,first_name)
         else :
             print "turning fan off"
+            save_fan_state(fan_state_1,first_name)
         return fan_state_1
 
 @application.route('/switch1state',methods = ['GET','POST'])
 def switch1state():
-    if request.method == 'POST': 
+    if request.method == 'POST':
+        global switch1_state_1
+        first_name = "Shailendra" 
         switch1_state_1 = request.form['switch1_state']
         print switch1_state_1
         if switch1_state_1 == 'on':
             print "turning Switch1 on"
+            save_switch1_state(switch1_state_1,first_name)
         else :
             print "turning switch1 off"
+            save_switch1_state(switch1_state_1,first_name)
         return switch1_state_1
 
 @application.route('/coffeemachine',methods = ['GET','POST'])
 def coffeemachine():
     if request.method == 'POST':
-        first_name = "Shailendra" 
+        first_name = "Shailendra"
+        global coffeem_state_1
         coffeem_state_1 = request.form['coffeem_state']
         print coffeem_state_1
         if coffeem_state_1 == 'on':
             print "turning coffee machine on"
-            save_coffeem_state(first_name, coffeem_state_1)
+            save_coffeem_state(coffeem_state_1,first_name)
         else :
             print "turning coffee machine off"
-            save_coffeem_state(first_name, coffeem_state_1)
+            save_coffeem_state(coffeem_state_1,first_name)
     return coffeem_state_1 
           
 def create_machine_state_table():        
@@ -124,9 +133,85 @@ def save_tubelight_state(tubelight_state, first_name):
         cursor.close()
         conn.close()
         print ("connection closed.")
+
+def save_fan_state(fan_state_1, first_name):
+    print first_name, fan_state_1
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+        if conn.is_connected():
+            print('connection established.')
+        else:
+            print('connection failed.')
+        
+        cursor = conn.cursor()
+        query ="""UPDATE home_control SET fan_state_1=%s WHERE first_name=%s"""
+        print query 
+        cursor.execute(query, (fan_state_1,first_name))
+        
+
+        conn.commit()
+        print "after commit"
+    except Error as error:
+        print(error)
+        
+    finally:
+        cursor.close()
+        conn.close()
+        print ("connection closed.")
   
 
- 
+def save_coffeem_state(coffeem_state_1, first_name):
+    print first_name, coffeem_state_1
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+        if conn.is_connected():
+            print('connection established.')
+        else:
+            print('connection failed.')
+        
+        cursor = conn.cursor()
+        query ="""UPDATE home_control SET coffeem_state_1=%s WHERE first_name=%s"""
+        print query 
+        cursor.execute(query, (coffeem_state_1,first_name))
+        
+
+        conn.commit()
+        print "after commit"
+    except Error as error:
+        print(error)
+        
+    finally:
+        cursor.close()
+        conn.close()
+        print ("connection closed.")
+
+def save_switch1_state(switch1_state_1, first_name):
+    print first_name, switch1_state_1
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+        if conn.is_connected():
+            print('connection established.')
+        else:
+            print('connection failed.')
+        
+        cursor = conn.cursor()
+        query ="""UPDATE home_control SET switch1_state_1=%s WHERE first_name=%s"""
+        print query 
+        cursor.execute(query, (switch1_state_1,first_name))
+        
+
+        conn.commit()
+        print "after commit"
+    except Error as error:
+        print(error)
+        
+    finally:
+        cursor.close()
+        conn.close()
+        print ("connection closed.") 
 
 if __name__ == "__main__":
     application.run(host='0.0.0.0')
