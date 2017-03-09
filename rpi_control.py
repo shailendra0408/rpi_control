@@ -10,7 +10,8 @@ application = Flask(__name__)
 
 @application.route("/")
 def hello():
-    
+    first_name="Shailendra"
+    home_appliance_state = get_appliance_state(first_name)
     return render_template("control_page.html")
 
 @application.route('/tubelightstate',methods = ['GET','POST'])
@@ -206,6 +207,65 @@ def save_switch1_state(switch1_state_1, first_name):
 
         conn.commit()
         print "after commit"
+    except Error as error:
+        print(error)
+        
+    finally:
+        cursor.close()
+        conn.close()
+        print ("connection closed.") 
+
+def get_appliance_state(first_name):
+    print "in get_appliance_state function"
+    Name = 0
+    tubelightstate = 0
+    fanstate = 0
+    switch1state = 0
+    coffeemstate = 0
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+        print ('Trying')
+        if conn.is_connected():
+            print('connection established.')
+        else:
+            print('connection failed.')
+        
+        cursor = conn.cursor(buffered=True) 
+        query ="""SELECT * FROM home_control WHERE first_name = %s"""
+        cursor.execute(query, (first_name,))  
+        rows_count = cursor.rowcount
+        print rows_count
+        if rows_count > 0:
+            result_set = cursor.fetchall()
+            print result_set
+            for row in result_set:
+                Name = row[0]
+                tubelightstate=row[1]
+                fanstate=row[2]
+                switch1state=row[3]
+                coffeemstate=row[4]
+                print Name
+                print tubelightstate
+                print fanstate
+                print switch1state 
+                print coffeemstate 
+                home_appliance_data = {'Tubelight_state':tubelightstate,'Fan_state':fanstate,'Switch1_state':switch1state,'coffeem_state':coffeemstate                }
+                print "dictionay "
+                print home_appliance_data 
+                return home_appliance_data
+                
+        else:
+            print "no rows"
+            return 0
+        
+        if cursor.lastrowid:
+            print('last insert id', cursor.lastrowid)
+        else:
+            print('last insert id not found')
+ 
+            conn.commit()
+
     except Error as error:
         print(error)
         
