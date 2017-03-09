@@ -1,4 +1,4 @@
-from flask import Flask , render_template, request
+from flask import Flask , render_template, request, redirect, url_for
 import mysql.connector
 from mysql.connector import MySQLConnection, Error
 from python_mysql_dbconfig import read_db_config
@@ -10,6 +10,7 @@ application = Flask(__name__)
 
 @application.route("/")
 def hello():
+    
     return render_template("control_page.html")
 
 @application.route('/tubelightstate',methods = ['GET','POST'])
@@ -30,7 +31,7 @@ def tubelightstate():
             print "turning light off"
             save_tubelight_state(tubelight_state, first_name) 
             print "after saving off in the DB" 
-        return tubelight_state
+        return redirect(url_for('hello'))
 
 @application.route('/fanstate',methods = ['GET','POST'])
 def fanstate():
