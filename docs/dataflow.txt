@@ -12,4 +12,11 @@
     --> Other way is that you don't at all use form, use JS / Ajax calls in the page to push data to cloud. and when you referesh page, do AJAX calls        to get the present state from the server. 
     --> Other way arond is that you post data, load the page again and while loading the page, call a end point, which will get each and every value         from the server and put in on the page using Jinja2 .
 (7) one problem is that if some one manually pressed the button locally on, we need to update the server. For that, you need to do hardware programming. When wver any command to turn on /off any button, update a value in some text file. And after every "x" secdons read the value and see if the state is changed from the previous one. If yes, then update the server. 
- 
+(8) How did a local hardware or in our case a RPI will get the state of the appliance 
+    --> One way is that it keep on "polling" the state of all the appliances. 
+        (a) for this a local cron job has to be made
+        (b) Cron job will be too simple and it can be used for some thing like 1-2 or even 10 deices. But what when you are thinking to extend the 
+            same code for something like gateway or hub?
+        (c) In case of hub, you need to write some thing like agent, which can tackle multiple deives and can do multiple communcation.
+    --> one way is that we use some messaging service like GCM to push data from the server to device - Now that data can be defined.
+     
