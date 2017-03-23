@@ -12,7 +12,7 @@ application = Flask(__name__)
 def hello():
     first_name="Shailendra"
     home_appliance_state = get_appliance_state(first_name)
-    return render_template("control_page.html")
+    return render_template("control_page.html", user = home_appliance_state)
 
 @application.route('/tubelightstate',methods = ['GET','POST'])
 def tubelightstate():
