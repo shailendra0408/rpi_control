@@ -30,15 +30,6 @@
     <meta name="apple-mobile-web-app-title" content="Material Design Lite">
 
 
-    <!-- Tile icon for Win8 (144x144 + tile color) -->
-
-
-
-
-    <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
-    <!--
-    <link rel="canonical" href="http://www.example.com/">
-    -->
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -127,11 +118,11 @@
 
         <form name="toggleFormtube" action="/tubelightstate" method="POST">
             <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="tube-on">
-                <input id="tube-on"  class="mdl-radio__button" name="toggle" onClick="send()" value="on" type="radio"checked/>
+                <input id="tube-on"  class="mdl-radio__button" name="toggle" onClick="send()" value="on" type="radio" checked/>
                  <span class="mdl-radio__label">ON</span>
             </label>
             <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="tube-off">
-                <input id="tube-off"  class="mdl-radio__button" name="toggle" onClick="send()" value="off" type="radio"/>
+                <input id="tube-off"  class="mdl-radio__button" name="toggle" onClick="send()" value="off" type="radio" />
                  <span class="mdl-radio__label">OFF</span>
             </label>
         </form>
@@ -179,9 +170,9 @@
     <div class="mdl-card__actions mdl-card--border">
       <div align="center">
 
-          <form name="toggleFormswicth1" action="/switch1state" method="POST">
+          <form name="toggleFormswitch1" action="/switch1state" method="POST">
               <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="switch1-on">
-                  <input id="switch1-on"  class="mdl-radio__button" name="swicth1_state" onClick="sendswitch1state()" value="on" type="radio"checked/>
+                  <input id="switch1-on"  class="mdl-radio__button" name="switch1_state" onClick="sendswitch1state()" value="on" type="radio"/>
                    <span class="mdl-radio__label">ON</span>
               </label>
               <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="switch1-off">
@@ -208,7 +199,7 @@
 
           <form name="toggleFormcoffeemachine" action="/coffeemachine" method="POST">
               <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="coffee-on">
-                  <input id="coffee-on"  class="mdl-radio__button" name="coffeem_state" onClick="sendcoffeestate()" value="on" type="radio"checked/>
+                  <input id="coffee-on"  class="mdl-radio__button" name="coffeem_state" onClick="sendcoffeestate()" value="on" type="radio" selected/>
                    <span class="mdl-radio__label">ON</span>
               </label>
               <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="coffee-off">
@@ -235,11 +226,15 @@
         document.toggleFormfan.submit();
     }
     function sendswitch1state(){
-        document.toggleFormswicth1.submit();
+        document.toggleFormswitch1.submit();
     }
     function sendcoffeestate(){
         document.toggleFormcoffeemachine.submit();
     }
+    document.getElementById("tube-on").checked = true;
+    document.getElementById("fan-on").checked = true;
+    document.getElementById("switch1-on").checked = true;
+    document.getElementById("coffee-on").checked = true;
     </script>
 
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
