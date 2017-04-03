@@ -254,9 +254,46 @@
   <script type="text/javascript">
     var message = {{user | safe }};
     console.log(message);
-    for(var index in message) {
-       console.log( index + " : " + message[index] );
-}
+    console.log(message.Fan_state);
+    console.log(message.Switch1_state);
+    console.log(message.Tubelight_state);
+    console.log(message.coffeem_state);
+    if (message.Fan_state == "on"){
+        console.log("on is the state of Fan")
+        document.getElementById("fan-on").checked = true;
+    }
+
+    if (message.Fan_state == "off"){
+        console.log("off is the state of Fan")
+        document.getElementById("fan-off").checked = true;
+    }
+    if (message.Swicth1_state == "on"){
+        console.log("on is the state of Switch1")
+        document.getElementById("switch1-on").checked = true;
+    }
+
+    if (message.Switch1_state == "off"){
+        console.log("off is the state of Swicth1")
+        document.getElementById("switch1-off").checked = true;
+    }
+    if (message.Tubelight_state == "on"){
+        console.log("on is the state of Tubelight")
+        document.getElementById("tube-on").checked = true;
+    }
+
+    if (message.Tubelight_state == "off"){
+        console.log("off is the state of Tubelight")
+        document.getElementById("tube-off").checked = true;
+    }
+    if (message.Coffeem_state == "on"){
+        console.log("on is the state of Coffee Machine")
+        document.getElementById("coffee-on").checked = true;
+    }
+
+    if (message.Fan_state == "off"){
+        console.log("off is the state of Coffee Machine")
+        document.getElementById("coffee-off").checked = true;
+    }
 </script>
     
   </body>
