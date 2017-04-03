@@ -251,5 +251,13 @@
       dialog.close();
     });
   </script>
+  <script type="text/javascript">
+    var message = {{user | safe }};
+    console.log(message);
+    for(var index in message) {
+       console.log( index + " : " + message[index] );
+}
+</script>
+    
   </body>
 </html>
