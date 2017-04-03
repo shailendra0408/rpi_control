@@ -199,7 +199,7 @@
 
           <form name="toggleFormcoffeemachine" action="/coffeemachine" method="POST">
               <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="coffee-on">
-                  <input id="coffee-on"  class="mdl-radio__button" name="coffeem_state" onClick="sendcoffeestate()" value="on" type="radio" selected/>
+                  <input id="coffee-on"  class="mdl-radio__button" name="coffeem_state" onClick="sendcoffeestate()" value="on" type="radio" />
                    <span class="mdl-radio__label">ON</span>
               </label>
               <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="coffee-off">
@@ -285,12 +285,12 @@
         console.log("off is the state of Tubelight")
         document.getElementById("tube-off").checked = true;
     }
-    if (message.Coffeem_state == "on"){
+    if (message.coffeem_state == "on"){
         console.log("on is the state of Coffee Machine")
         document.getElementById("coffee-on").checked = true;
     }
 
-    if (message.Fan_state == "off"){
+    if (message.coffeem_state == "off"){
         console.log("off is the state of Coffee Machine")
         document.getElementById("coffee-off").checked = true;
     }
