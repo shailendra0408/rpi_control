@@ -1,9 +1,9 @@
-from flask import Flask , render_template, request, redirect, url_for
+from flask import Flask , render_template, request, redirect, url_for, escape, session, make_response, request, jsonify  
 import mysql.connector
 from mysql.connector import MySQLConnection, Error
 from python_mysql_dbconfig import read_db_config
 from mysql.connector import errorcode
-
+import json 
 
 
 application = Flask(__name__)
@@ -11,8 +11,8 @@ application = Flask(__name__)
 @application.route("/")
 def hello():
     first_name="Shailendra"
-    home_appliance_state = get_appliance_state(first_name)
-    return render_template("control_page.html", user = home_appliance_state)
+    home_appliance_state = get_appliance_state(first_name) 
+    return render_template("control_page.html" ,user = json.dumps(home_appliance_state))
 
 @application.route('/tubelightstate',methods = ['GET','POST'])
 def tubelightstate():
@@ -47,7 +47,7 @@ def fanstate():
         else :
             print "turning fan off"
             save_fan_state(fan_state_1,first_name)
-        return fan_state_1
+        return redirect(url_for('hello'))
 
 @application.route('/switch1state',methods = ['GET','POST'])
 def switch1state():
@@ -62,7 +62,7 @@ def switch1state():
         else :
             print "turning switch1 off"
             save_switch1_state(switch1_state_1,first_name)
-        return switch1_state_1
+        return redirect(url_for('hello'))
 
 @application.route('/coffeemachine',methods = ['GET','POST'])
 def coffeemachine():
@@ -77,7 +77,7 @@ def coffeemachine():
         else :
             print "turning coffee machine off"
             save_coffeem_state(coffeem_state_1,first_name)
-    return coffeem_state_1 
+    return  redirect(url_for('hello'))
           
 def create_machine_state_table():        
     try:
@@ -250,7 +250,7 @@ def get_appliance_state(first_name):
                 print fanstate
                 print switch1state 
                 print coffeemstate 
-                home_appliance_data = {'Tubelight_state':tubelightstate,'Fan_state':fanstate,'Switch1_state':switch1state,'coffeem_state':coffeemstate                }
+                home_appliance_data = {"Tubelight_state":tubelightstate,"Fan_state":fanstate,"Switch1_state":switch1state,"coffeem_state":coffeemstate                }
                 print "dictionay "
                 print home_appliance_data 
                 return home_appliance_data
