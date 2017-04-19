@@ -19,4 +19,14 @@
             same code for something like gateway or hub?
         (c) In case of hub, you need to write some thing like agent, which can tackle multiple deives and can do multiple communcation.
     --> one way is that we use some messaging service like GCM to push data from the server to device - Now that data can be defined.
+    --> other way is to simply use MQTT protocol with publish and subscribe model. Althoug this is the same thing which happen in the GCM (FCM) also         but GCM is much more complicated thing. At present have written two codes, one for publishing and one for subscribing.
+        Now if in the code at present if we are going to use the MQTT, then we can use Cloud.mqtt broker. 
+    --> When ever a button is pressed in the web-ui, a function is called internally to do the corresponding change in the DB. At same point, publish        a message with a specific topic. 
+    --> On the RPI side, we will run a script (with superviord) to subscribe to multiple topics 
+        example - subscribe([("my/topic", 0), ("another/topic", 2)])
+    --> Now if there is any change, we find it and then we take a corresponding action on te RPI using the same GPIO module 
+    
+(9) How to import a python as a module 
+    --> create a file __init__.py in every directory which you want to include and if there are any files in it, use them as 
+        __all__ = ["dto", "util", "service", "console","application", "tables"] where all in "" are the files locally in the directory 
      
