@@ -8,6 +8,8 @@ def on_message(mosq, obj, msg):
     print "printing the payload: {0}".format(msg.payload)
     #print str(msg.payload)
     state = str(msg.payload)
+    x= state.split(':')
+    print "appliance is : {0} and state is : {1}".format (x[0],x[1])
     if state == "OFF":
         print "{0} is OFF".format(msg.topic)
     elif state == "ON":
