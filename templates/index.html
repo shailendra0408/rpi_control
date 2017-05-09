@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="../static/assets/css/material.min.css">
+    <link rel="stylesheet" href="../static/assets/css/material-tapp.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.light_green-amber.min.css" />
+    <link rel="stylesheet" href="../static/assets/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailoring Assistant</title>
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+            <!-- Title -->
+             <div class="mdl-layout-spacer"></div>
+            <!-- Navigation -->
+            <nav class="mdl-navigation">
+                <button id="demo-menu" class="mdl-button mdl-js-button mdl-button--primary mdl-color-text--white">RPI-CONTROL</button>
+                <button id="demo-menu2" class="mdl-button mdl-js-button mdl-button--primary mdl-color-text--white">ADMIN</button>
+                <button class="mdl-button mdl-js-button mdl-button--primary mdl-color-text--white">BLOG</button>
+                <button class="mdl-button mdl-js-button mdl-button--primary mdl-color-text--white">CONTACT</button>
+            </nav>
+        </div>
+    </header>
+    <main class="mdl-layout__content">
+		<div class="mdl-card mdl-shadow--6dp">
+			<div class="mdl-card__title mdl-color--primary mdl-color-text--white">
+				<h2 class="mdl-card__title-text">Please Login</h2>
+			</div>
+	  	<div class="mdl-card__supporting-text">
+				<form action= '/login' method="POST">
+					<div class="mdl-textfield mdl-js-textfield">
+						<input class="mdl-textfield__input" type="text" id="email_id" name="email_id" />
+						<label class="mdl-textfield__label" for="email_id">email_id</label>
+					</div>
+					<div class="mdl-textfield mdl-js-textfield">
+						<input class="mdl-textfield__input" type="text" id="password" name="password" />
+						<label class="mdl-textfield__label" for="password">Password</label>
+					</div>
+          <div align="center">
+                <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color--green" type="submit">Log in</button>
+          </div>
+          </form>
+         
+        </div>
+
+
+
+
+		</div>
+	</main>
+</div>
+
+
+
+<script src="../static/assets/js/material.min.js"></script>
+</body>
+</html>

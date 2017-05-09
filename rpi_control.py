@@ -1,14 +1,77 @@
-from flask import Flask , render_template, request, redirect, url_for, escape, session, make_response, request, jsonify  
 import mysql.connector
+import json
+import sys 
+import os
+ 
 from mysql.connector import MySQLConnection, Error
+from flask import Flask , render_template, request, redirect, url_for, escape, session, make_response, request, jsonify  
 from python_mysql_dbconfig import read_db_config
 from mysql.connector import errorcode
-import json 
+from mqttpubsub.mqttpublish import my_mqtt_publish
+
+
 
 
 application = Flask(__name__)
 
+#@todo - generate a radom secrete key everytime this application is run 
+application.secret_key = "saksh2iuyw2klhqwshswi"
+
+#landing page is this
 @application.route("/")
+def landing():
+    if 'email_id' in session:
+        Phone_number = 0
+        email_id = session['email_id']
+        password = session['password']
+        merchant_exist_session = if_merchant_exist(email_id, Phone_number)
+        if merchant_exist_session == 1:
+            user_validation = verify_user(email_id,password)
+            if user_validation == 1:
+                return redirect(url_for('hello'))
+    else:
+        print "No user data in session"
+        response = make_response(redirect('/index'))
+        return response
+
+@application.route("/index")
+def index():
+    return render_template('index.html', title='tapp')
+
+#login function here, user will be asked to enter his details 
+@application.route('/login', methods = ['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email_id = 0
+        password = 0
+        mechant_exist_login = 0
+        contact_number = 0 
+        print "indside login "
+        session['email_id'] = request.form['email_id']
+        session['password'] = request.form['password']
+        email_id = request.form['email_id']
+        password = request.form['password']
+        print email_id, password
+        merchant_exist_login = if_merchant_exist(email_id, contact_number)
+        if merchant_exist_login == 1:
+            user_verification = verify_user(email_id,password)
+            return redirect(url_for('hello'))
+    else:
+        print "No user data in session"
+        response = make_response(redirect('/index'))
+        return response
+          
+
+@application.route('/logout')
+def logout():
+   # remove the username from the session if it is there
+   session.pop('username', None)
+   return redirect(url_for('index'))
+
+
+
+#route need to be changed here
+@application.route("/controlpage")
 def hello():
     first_name="Shailendra"
     home_appliance_state = get_appliance_state(first_name) 
@@ -27,11 +90,13 @@ def tubelightstate():
             print "turning light on"
             save_tubelight_state(tubelight_state, first_name)
             print "after saving on in the DB" 
-
+            my_mqtt_publish("appliance/state","tubelight:ON")
         else :
             print "turning light off"
             save_tubelight_state(tubelight_state, first_name) 
             print "after saving off in the DB" 
+            my_mqtt_publish("appliance/state","tubelight:OFF")
+ 
         return redirect(url_for('hello'))
 
 @application.route('/fanstate',methods = ['GET','POST'])
@@ -44,9 +109,11 @@ def fanstate():
         if fan_state_1 == 'on':
             print "turning fan on"
             save_fan_state(fan_state_1,first_name)
+            my_mqtt_publish("appliance/state","fan:ON") 
         else :
             print "turning fan off"
             save_fan_state(fan_state_1,first_name)
+            my_mqtt_publish("appliance/state","fan:OFF") 
         return redirect(url_for('hello'))
 
 @application.route('/switch1state',methods = ['GET','POST'])
@@ -59,9 +126,11 @@ def switch1state():
         if switch1_state_1 == 'on':
             print "turning Switch1 on"
             save_switch1_state(switch1_state_1,first_name)
+            my_mqtt_publish("appliance/state","switch1:ON") 
         else :
             print "turning switch1 off"
             save_switch1_state(switch1_state_1,first_name)
+            my_mqtt_publish("appliance/state","switch:OFF") 
         return redirect(url_for('hello'))
 
 @application.route('/coffeemachine',methods = ['GET','POST'])
@@ -74,9 +143,11 @@ def coffeemachine():
         if coffeem_state_1 == 'on':
             print "turning coffee machine on"
             save_coffeem_state(coffeem_state_1,first_name)
+            my_mqtt_publish("appliance/state","coffeem:ON") 
         else :
             print "turning coffee machine off"
             save_coffeem_state(coffeem_state_1,first_name)
+            my_mqtt_publish("appliance/state","coffeem:OFF") 
     return  redirect(url_for('hello'))
           
 def create_machine_state_table():        
@@ -215,6 +286,7 @@ def save_switch1_state(switch1_state_1, first_name):
         conn.close()
         print ("connection closed.") 
 
+#@todo - need to create a admin page, where you can cretae user, as this is only admin controlled app.
 def get_appliance_state(first_name):
     print "in get_appliance_state function"
     Name = 0
@@ -273,6 +345,98 @@ def get_appliance_state(first_name):
         cursor.close()
         conn.close()
         print ("connection closed.") 
+
+
+def if_merchant_exist(email_id, contact_number):
+    print email_id, contact_number
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+        if conn.is_connected():
+            print('connection established.')
+        else:
+            print('connection failed.')
+        
+        cursor = conn.cursor(buffered=True)
+        query ="""SELECT * FROM merchant_registration_table WHERE email_id = %s OR contact_number = %s""" 
+        cursor.execute(query, (email_id,contact_number))
+        rows_count = cursor.rowcount
+        print rows_count
+        if rows_count > 0:
+            result_set = cursor.fetchall()
+            print "user matched"
+            print result_set
+            return 1
+            
+        else:
+            print "user not macted"
+            return 0
+
+        if cursor.lastrowid:
+            print('last insert id', cursor.lastrowid)
+        else:
+            print('last insert id not found')
+ 
+            conn.commit()
+
+    except Error as error:
+        print(error)
+        
+    finally:
+        cursor.close()
+        conn.close()
+        print ("connection closed.")
+         
+def verify_user(email_id, password):
+    print "in verify user function"
+    print email_id, password  
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+        print ('Trying')
+        if conn.is_connected():
+            print('connection established.')
+        else:
+            print('connection failed.')
+        
+        cursor = conn.cursor(buffered=True)
+        query ="""SELECT * FROM merchant_registration_table WHERE email_id = %s""" 
+        cursor.execute(query, (email_id,))
+        rows_count = cursor.rowcount
+        print "printing rows count"
+        print rows_count
+        if rows_count > 0:
+            print "There are rows in the table - not empty"
+            result_set = cursor.fetchall()
+            for row in result_set:
+                entered_password = row[3]
+                print "entered password is "
+                print str(entered_password)
+                if str(entered_password) == password:
+                    print "password matched"
+                    return 1
+                else:
+                    print "password didn't matched"
+                    return 0
+        else:
+            return 0
+            print "there are no rows in table"
+
+        if cursor.lastrowid:
+            print('last insert id', cursor.lastrowid)
+        else:
+            print('last insert id not found')
+ 
+            conn.commit()
+
+    except Error as error:
+        print(error)
+        
+    finally:
+        cursor.close()
+        conn.close()
+        print ("connection closed.")    
+
 
 if __name__ == "__main__":
     application.run(host='0.0.0.0')
