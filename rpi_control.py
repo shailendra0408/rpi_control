@@ -15,7 +15,7 @@ from mqttpubsub.mqttpublish import my_mqtt_publish
 application = Flask(__name__)
 
 #@todo - generate a radom secrete key everytime this application is run 
-application.secret_key = "saksh2iuyw2klhqwshswi"
+application.secret_key = "###########################################"
 
 #landing page is this
 @application.route("/")
