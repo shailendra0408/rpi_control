@@ -27,11 +27,13 @@ url = urlparse.urlparse(url_str)
 
 
 def my_mqtt_publish(topic, payload):
-    mqttc.username_pw_set("wbjddnda", "oantKK07oLSg")
+    mqttc.username_pw_set("<username>", "<password>")
     mqttc.connect(url.hostname, url.port)
-    mqttc.publish(topic, payload)
-    print "going to publish topic : {0} and payload {1}".format(topic,payload)
-
+    try:
+        mqttc.publish(topic, payload)
+        print "going to publish topic : {0} and payload {1}".format(topic,payload)
+    except Exception as e:
+        print e.args, e.message
 
 
 
