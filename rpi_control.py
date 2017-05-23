@@ -50,9 +50,9 @@ def landing():
         return render_template("index.html", user = error )
         #return response
 
-#@application.route("/index")
-#def index():
-#    return render_template('index.html')
+@application.route("/index")
+def index():
+    return render_template('index.html', user = "")
 
 #login function here, user will be asked to enter his details 
 @application.route('/login', methods = ['GET', 'POST'])
@@ -78,6 +78,10 @@ def login():
                 error_msg = "Login and password didn't macthed, please try again"
                 user = {'error':error_msg}
                 return render_template('index.html',user = user)
+        else:
+            error_msg = "User not found among the registered users"
+            user = {'error': error_msg}
+            return render_template('index.html', user = user)
     else:
         print "No user data in session"
         response = make_response(redirect('/index'))
