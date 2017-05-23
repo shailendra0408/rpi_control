@@ -45,12 +45,14 @@ def landing():
                 return redirect(url_for('hello'))
     else:
         logger.debug("No user in this session")
-        response = make_response(redirect('/index'))
-        return response
+        error_msg_1 = "No user in this session, please login"
+        error = {'error':error_msg_1}
+        return render_template("index.html", user = error )
+        #return response
 
-@application.route("/index")
-def index():
-    return render_template('index.html', title='tapp')
+#@application.route("/index")
+#def index():
+#    return render_template('index.html')
 
 #login function here, user will be asked to enter his details 
 @application.route('/login', methods = ['GET', 'POST'])
@@ -69,7 +71,13 @@ def login():
         merchant_exist_login = if_merchant_exist(email_id, contact_number)
         if merchant_exist_login == 1:
             user_verification = verify_user(email_id,password)
-            return redirect(url_for('hello'))
+            if user_verification == 1:
+                return redirect(url_for('hello'))
+            else:
+                
+                error_msg = "Login and password didn't macthed, please try again"
+                user = {'error':error_msg}
+                return render_template('index.html',user = user)
     else:
         print "No user data in session"
         response = make_response(redirect('/index'))
@@ -103,7 +111,7 @@ def tubelightstate():
         if tubelight_state == 'on':
             logger.info("turning light ON")
             save_tubelight_state(tubelight_state, first_name)
-            logger.infor("After saving ON in the DB")
+            logger.info("After saving ON in the DB")
             my_mqtt_publish("appliance/state","tubelight:ON")
         else :
             logger.info("turning light off")
@@ -198,7 +206,6 @@ def create_machine_state_table():
 def save_tubelight_state(tubelight_state, first_name):
     logger.info("Inside  save_tubellight_state function")
     logger.info("First_name : %s and Tubelight_state : %s",first_name, tubelight_state)
-    print first_name, tubelight_state
     try:
         db_config = read_db_config()
         conn = MySQLConnection(**db_config)
@@ -264,7 +271,7 @@ def save_coffeem_state(coffeem_state_1, first_name):
         
         cursor = conn.cursor()
         query ="""UPDATE home_control SET coffeem_state_1=%s WHERE first_name=%s"""
-        print query 
+        #print query 
         cursor.execute(query, (coffeem_state_1,first_name))
         
 
@@ -290,7 +297,7 @@ def save_switch1_state(switch1_state_1, first_name):
         
         cursor = conn.cursor()
         query ="""UPDATE home_control SET switch1_state_1=%s WHERE first_name=%s"""
-        print query 
+        #print query 
         cursor.execute(query, (switch1_state_1,first_name))
         
 
@@ -306,7 +313,7 @@ def save_switch1_state(switch1_state_1, first_name):
 #@todo - need to create a admin page, where you can cretae user, as this is only admin controlled app.
 def get_appliance_state(first_name):
     logger.debug("in get_appliance_state function") 
-    print "in get_appliance_state function"
+    #print "in get_appliance_state function"
     Name = 0
     tubelightstate = 0
     fanstate = 0
@@ -326,10 +333,10 @@ def get_appliance_state(first_name):
         query ="""SELECT * FROM home_control WHERE first_name = %s"""
         cursor.execute(query, (first_name,))  
         rows_count = cursor.rowcount
-        print rows_count
+        #print rows_count
         if rows_count > 0:
             result_set = cursor.fetchall()
-            print result_set
+            #print result_set
             for row in result_set:
                 Name = row[0]
                 tubelightstate=row[1]
@@ -363,31 +370,29 @@ def get_appliance_state(first_name):
 
 
 def if_merchant_exist(email_id, contact_number):
-    print email_id, contact_number
+    logger.info("Email Id {0} and contact_number is {1}".format(email_id, contact_number))
     try:
         db_config = read_db_config()
         conn = MySQLConnection(**db_config)
         if conn.is_connected():
             logger.info("connection established with DB")
-            print('connection established.')
         else:
-            print('connection failed.')
             logger.info("connection fialed with DB")
         
         cursor = conn.cursor(buffered=True)
         query ="""SELECT * FROM merchant_registration_table WHERE email_id = %s OR contact_number = %s""" 
         cursor.execute(query, (email_id,contact_number))
         rows_count = cursor.rowcount
-        print rows_count
+        #print rows_count
         if rows_count > 0:
             result_set = cursor.fetchall()
             logger.debug('user matched')
             logger.debug("result_set is : %s",result_set)
-            print result_set
+            #print result_set
             return 1
             
         else:
-            logger.debug("user not matched")
+            logger.debug("user not found")
             return 0
 
         if cursor.lastrowid:
@@ -411,7 +416,7 @@ def verify_user(email_id, password):
     try:
         db_config = read_db_config()
         conn = MySQLConnection(**db_config)
-        print ('Trying')
+        #print ('Trying')
         if conn.is_connected():
             print('connection established.')
         else:
@@ -421,14 +426,14 @@ def verify_user(email_id, password):
         query ="""SELECT * FROM merchant_registration_table WHERE email_id = %s""" 
         cursor.execute(query, (email_id,))
         rows_count = cursor.rowcount
-        print "printing rows count"
-        print rows_count
+        #print "printing rows count"
+        #print rows_count
         if rows_count > 0:
             logger.info("There are rows in the table - not empty")
             result_set = cursor.fetchall()
             for row in result_set:
                 entered_password = row[3]
-                logger.debug('entered password is : %s',entered_password)
+                logger.debug('entered password is : %s',password)
                 if str(entered_password) == password:
                     logger.debug("password matched")
                     return 1
