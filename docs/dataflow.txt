@@ -33,4 +33,9 @@
 
 (10) On the hardware side, how to detect if there is change in the state due to local pressing of the switch?
     --> Run a cron job every second and see if the state of the button is same as the command revceived from the server or it is different. 
-    --> if it is different, then ??????????? And meanwhile how to determine if there is even a change due to physical pressing of the switch:   
+    --> if it is different, then ??????????? And meanwhile how to determine if there is even a change due to physical pressing of the switch:
+
+CR - Change request
+(1) Create a admin page to create user. Need to be a simple page. 
+(2) Add a graph in the user.html page and add a sensor in the RPI which should push the data to the server after every 10 minutes and show the data on using graph on the main user screen. 
+(3) Later on, depending upon the amount of time a particular bulb is ON, generate the bill <need to write a job for this>   
