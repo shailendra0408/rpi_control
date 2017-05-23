@@ -88,7 +88,7 @@ def login():
 def logout():
    # remove the username from the session if it is there
    session.pop('username', None)
-   return redirect(url_for('index'))
+   return render_template ("index.html", user="")
 
 
 
