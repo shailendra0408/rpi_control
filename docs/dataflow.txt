@@ -39,3 +39,4 @@ CR - Change request
 (1) Create a admin page to create user. Need to be a simple page. 
 (2) Add a graph in the user.html page and add a sensor in the RPI which should push the data to the server after every 10 minutes and show the data on using graph on the main user screen. 
 (3) Later on, depending upon the amount of time a particular bulb is ON, generate the bill <need to write a job for this>   
+(4) Mysql optimisation. Instead of opening and closing the connection, just open it once. Also move the database related functions to one file 
