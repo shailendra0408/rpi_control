@@ -37,6 +37,12 @@
 
 CR - Change request
 (1) Create a admin page to create user. Need to be a simple page. 
-(2) Add a graph in the user.html page and add a sensor in the RPI which should push the data to the server after every 10 minutes and show the data on using graph on the main user screen. 
+(2) Add a graph in the user.html page and add a sensor in the RPI which should push the data to the server after every 10 minutes and show the data on using graph on the main user screen. Need to work on the API or a simple handler which should be able to receive data from sensor and store it in the DB with a specific serial number. Now when ever the page is loaded, we get the data from the DB for last 6 hour, convert that to the JSON and pass it to the page via Ninja and display the data on the page via 
+    (a) Chart.js
+    (b) d3js
+    (c) Rickshaw
+    (d) Ploty
+    (e) chartist.js
+    Also as of now, we don't have to bother too much about the API authentication, but that has to be done in the future  
 (3) Later on, depending upon the amount of time a particular bulb is ON, generate the bill <need to write a job for this>   
 (4) Mysql optimisation. Instead of opening and closing the connection, just open it once. Also move the database related functions to one file 
