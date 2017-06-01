@@ -3,7 +3,8 @@ import json
 import sys 
 import os
 import logging
- 
+
+from flask import abort 
 from mysql.connector import MySQLConnection, Error
 from flask import Flask , render_template, request, redirect, url_for, escape, session, make_response, request, jsonify  
 from python_mysql_dbconfig import read_db_config
@@ -462,6 +463,23 @@ def verify_user(email_id, password):
         cursor.close()
         conn.close()
         print ("connection closed.")    
+
+#api routes 
+@application.route('/rpi/apitest/v1.0/task_sensor_data', methods=['POST','GET'])
+def sensor_data():
+    if request.method == 'POST':
+        data_1 = request.args.get('data')
+        print data_1
+        if data_1 == '0':
+        #print request.headers
+        #print request.__dict__
+            return make_response(jsonify({'error': 'Not found'}), 404) 
+        else:
+            return jsonify({'Name': "Shailendra"})
+            #@todo - Save the data in a Time series database but as of now, just save the same in a Mysql databse. Need to see the impact on the performance  
+    else:
+        print "none receied"
+        return str(0)     
 
 
 if __name__ == "__main__":
