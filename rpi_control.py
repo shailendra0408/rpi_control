@@ -3,6 +3,7 @@ import json
 import sys 
 import os
 import logging
+import time
 
 from flask import abort 
 from mysql.connector import MySQLConnection, Error
@@ -469,6 +470,7 @@ def verify_user(email_id, password):
 def sensor_data():
     if request.method == 'POST':
         data_1 = request.args.get('data')
+        time_stamp = time.time()
         print data_1
         if data_1 == '0':
         #print request.headers
@@ -477,9 +479,69 @@ def sensor_data():
         else:
             return jsonify({'Name': "Shailendra"})
             #@todo - Save the data in a Time series database but as of now, just save the same in a Mysql databse. Need to see the impact on the performance  
+            #this function need not to be here. Basically in the starting of running this program, a script need to be aded which will create all these tables
+            create_sensor_data_table()
+            insert_sensor_data(data_1,time_stamp)
     else:
         print "none receied"
-        return str(0)     
+        return str(0)
+
+def store_sensor_data():
+    try:
+        db_config = read_db_config()
+        print db_config
+        print db_config['database']
+        conn = MySQLConnection(**db_config)
+        if conn.is_connected():
+            print('connection established.')
+        else:
+            print('connection failed.')
+
+        cursor = conn.cursor()
+        query ="""CREATE TABLE IF NOT EXISTS sensor_data_table (
+                  serial_number CHAR(20) NOT NULL,
+                  temperature_data DECIMAL(10),
+                  time_stamp TIMESTAMP,
+                  point_number int(11) NOT NULL AUTO_INCREMENT,
+                  PRIMARY KEY (`serial_number`) )""" 
+        cursor.execute(query)
+ 
+        conn.commit()
+
+    except Error as error:
+        print(error)
+        
+    finally:
+        cursor.close()
+        conn.close()
+        print ("connection closed.")
+
+def insert_sensor_data(serial_number,time_stamp,temperature_data):
+    query = "INSERT INTO sensor_data_table(serial_number,time_stamp,temperature_data)" \
+            "VALUES (%s,%s)"
+    args = (serial_number, time_stamp,temperature_data)
+
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+        print ('Trying')
+        if conn.is_connected():
+            print('connection established.')
+        else:
+            print('connection failed.')
+
+        cursor = conn.cursor()
+        cursor.execute(query, args)
+        
+        conn.commit()
+        
+    except Error as error:
+        print (error)
+    
+    finally:
+        cursor.close()
+        conn.close()
+     
 
 
 if __name__ == "__main__":
