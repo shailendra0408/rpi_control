@@ -12,6 +12,7 @@
 #############################################################################################
 
 
+
 import mysql.connector
 import json
 import sys 
@@ -499,6 +500,7 @@ def sensor_data():
         global data_1
         data_1 = request.args.get('data')
         global time_stamp
+        #change unix time stamp to UTC
         time_stamp = time.time()
         print data_1
         #@todo - Save the data in a Time series database but as of now, just save the same in a Mysql databse. 
@@ -530,11 +532,13 @@ def create_sensor_data_table():
             print('connection failed.')
 
         cursor = conn.cursor()
-        query ="""CREATE TABLE IF NOT EXISTS sensor_data_table_4 (
+        query ="""CREATE TABLE IF NOT EXISTS sensor_data_table_5 (
                   first_name VARCHAR(20),
                   temperature_data VARCHAR(20),
                   serial_number CHAR(20),
-                  time_stamp VARCHAR(20))""" 
+                  time_stamp VARCHAR(20),
+                  data_number_id int(11) NOT NULL AUTO_INCREMENT,
+                  PRIMARY KEY (`data_number_id`))""" 
         cursor.execute(query)
  
         conn.commit()
@@ -551,7 +555,7 @@ def insert_sensor_data(first_name,temperature_data,serial_number,time_stamp,):
     print time_stamp
     print data_1
     print serial_number
-    query = "INSERT INTO sensor_data_table_4(first_name, temperature_data,serial_number,time_stamp)" \
+    query = "INSERT INTO sensor_data_table_5(first_name, temperature_data,serial_number,time_stamp)" \
             "VALUES (%s,%s,%s,%s)"
     args = (first_name, temperature_data,serial_number,time_stamp)
 
