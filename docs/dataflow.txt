@@ -45,4 +45,7 @@ CR - Change request
     (e) chartist.js
     Also as of now, we don't have to bother too much about the API authentication, but that has to be done in the future  
 (3) Later on, depending upon the amount of time a particular bulb is ON, generate the bill <need to write a job for this>   
-(4) Mysql optimisation. Instead of opening and closing the connection, just open it once. Also move the database related functions to one file 
+(4) Mysql optimisation. Instead of opening and closing the connection, just open it once. Also move the database related functions to one file
+(5) Change unix time stamp to UTC while storing it in the DN. Need to research it a bit. How does people do, do they convert unix time stamp first to UTC and then store, or when they are displaying, they change the unix time stamp to thier local time.  If later is true, we will be required to do that using JS.
+(6) Move all the tables creation functions to one file which either you have to manually when this program boots or either check if the tables exist or not and if they don't exist, then create or otherwise move forward
+(7) later on move the data store to a time-series DB 
