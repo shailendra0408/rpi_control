@@ -1,3 +1,17 @@
+#############################################################################################
+# Author - Shailendra Singh 
+# Email id - srj0408@gmail.com 
+# Sample code for Home automation using RPI, Python, Flask, Jinja, UWSGI and Mysql. 
+# Right now, we are using Mysql which indeed is not a good choise if we are storing 
+# time series value i.e. sensor value with hight velocity (high speed not in mili or micro-second)
+# but in minutes. There are two or three optins while going for time seris. In this case as only
+# one device is sending data and therefore it is not required.
+# Also  in API's we are not using any authenctication and that is why this cannot be used online 
+# or should be used to control any real time home devices. This code is just for demonstration 
+# purpose
+#############################################################################################
+
+
 import mysql.connector
 import json
 import sys 
@@ -465,28 +479,46 @@ def verify_user(email_id, password):
         conn.close()
         print ("connection closed.")    
 
-#api routes 
+#################################################################################################
+#api routes
+#todo - Need to add authetication / security in API's.
+#Right now this API can used by any one who know the format in which we are pushing the data and 
+#that is why it is not recomended to use this while using it online  
+################################################################################################
+
+
 @application.route('/rpi/apitest/v1.0/task_sensor_data', methods=['POST','GET'])
 def sensor_data():
     if request.method == 'POST':
+        global first_name
+        #right now user name is hardcoded, but  this user name can be send using the API and according to user name, it will stored. 
+        # a single user can have multiple devices/serial number. 
+        first_name = "Shailendra"
+        global serial_number
+        serial_number = "test001"
+        global data_1
         data_1 = request.args.get('data')
+        global time_stamp
         time_stamp = time.time()
         print data_1
+        #@todo - Save the data in a Time series database but as of now, just save the same in a Mysql databse. 
+        #Need to see the impact on the performance  
+        create_sensor_data_table()
+        #this function need not to be here. Basically in the starting of running this program
+        #a script need to be aded which will create all these tables
+        insert_sensor_data(first_name, data_1,serial_number,time_stamp)
         if data_1 == '0':
         #print request.headers
         #print request.__dict__
             return make_response(jsonify({'error': 'Not found'}), 404) 
         else:
+            #this is not required. We can simply return the HTTP code 200 for successful posting of data
             return jsonify({'Name': "Shailendra"})
-            #@todo - Save the data in a Time series database but as of now, just save the same in a Mysql databse. Need to see the impact on the performance  
-            #this function need not to be here. Basically in the starting of running this program, a script need to be aded which will create all these tables
-            create_sensor_data_table()
-            insert_sensor_data(data_1,time_stamp)
     else:
         print "none receied"
         return str(0)
 
-def store_sensor_data():
+def create_sensor_data_table():
     try:
         db_config = read_db_config()
         print db_config
@@ -498,12 +530,11 @@ def store_sensor_data():
             print('connection failed.')
 
         cursor = conn.cursor()
-        query ="""CREATE TABLE IF NOT EXISTS sensor_data_table (
-                  serial_number CHAR(20) NOT NULL,
-                  temperature_data DECIMAL(10),
-                  time_stamp TIMESTAMP,
-                  point_number int(11) NOT NULL AUTO_INCREMENT,
-                  PRIMARY KEY (`serial_number`) )""" 
+        query ="""CREATE TABLE IF NOT EXISTS sensor_data_table_4 (
+                  first_name VARCHAR(20),
+                  temperature_data VARCHAR(20),
+                  serial_number CHAR(20),
+                  time_stamp VARCHAR(20))""" 
         cursor.execute(query)
  
         conn.commit()
@@ -516,10 +547,13 @@ def store_sensor_data():
         conn.close()
         print ("connection closed.")
 
-def insert_sensor_data(serial_number,time_stamp,temperature_data):
-    query = "INSERT INTO sensor_data_table(serial_number,time_stamp,temperature_data)" \
-            "VALUES (%s,%s)"
-    args = (serial_number, time_stamp,temperature_data)
+def insert_sensor_data(first_name,temperature_data,serial_number,time_stamp,):
+    print time_stamp
+    print data_1
+    print serial_number
+    query = "INSERT INTO sensor_data_table_4(first_name, temperature_data,serial_number,time_stamp)" \
+            "VALUES (%s,%s,%s,%s)"
+    args = (first_name, temperature_data,serial_number,time_stamp)
 
     try:
         db_config = read_db_config()
@@ -542,7 +576,8 @@ def insert_sensor_data(serial_number,time_stamp,temperature_data):
         cursor.close()
         conn.close()
      
-
+#@todo - Need to add a function which retrieve data from the DB i.e. for Last 6 hour and pass it to the Web-page using 
+#Jinja where it is displayed using graph. Also need to add indexing in order to have more efficient DB query 
 
 if __name__ == "__main__":
     application.run(host='0.0.0.0')
