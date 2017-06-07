@@ -506,6 +506,7 @@ def sensor_data():
         #@todo - Save the data in a Time series database but as of now, just save the same in a Mysql databse. 
         #Need to see the impact on the performance  
         create_sensor_data_table()
+        sensor_data_dict1 =query_sensor_data(serial_number)
         #this function need not to be here. Basically in the starting of running this program
         #a script need to be aded which will create all these tables
         insert_sensor_data(first_name, data_1,serial_number,time_stamp)
@@ -515,7 +516,7 @@ def sensor_data():
             return make_response(jsonify({'error': 'Not found'}), 404) 
         else:
             #this is not required. We can simply return the HTTP code 200 for successful posting of data
-            return jsonify({'Name': "Shailendra"})
+            return jsonify(sensor_data_dict1)
     else:
         print "none receied"
         return str(0)
@@ -581,7 +582,50 @@ def insert_sensor_data(first_name,temperature_data,serial_number,time_stamp,):
         conn.close()
      
 #@todo - Need to add a function which retrieve data from the DB i.e. for Last 6 hour and pass it to the Web-page using 
-#Jinja where it is displayed using graph. Also need to add indexing in order to have more efficient DB query 
+#Jinja where it is displayed using graph. Also need to add indexing in order to have more efficient DB query
+
+def  query_sensor_data(serial_number):
+    logger.info("in query sensor data function")
+    logger.info("serial number id is: %s ", serial_number)
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+        #print ('Trying')
+        if conn.is_connected():
+            print('connection established.')
+        else:
+            print('connection failed.')
+        
+        cursor = conn.cursor(buffered=True)
+        query ="""SELECT temperature_data,time_stamp FROM sensor_data_table_5  LIMIT 100""" 
+        cursor.execute(query)
+        rows_count = cursor.rowcount
+        if rows_count > 0:
+            logger.info("There are rows in the table - not empty")
+            result_set = cursor.fetchall()
+            for rows in result_set:
+                temperature = rows[0]
+                time_stamp_1 = rows[1]
+            return result_set
+        else:
+            return 0
+            logger.error("There are no rows in the table")
+
+        if cursor.lastrowid:
+            print('last insert id', cursor.lastrowid)
+        else:
+            print('last insert id not found')
+ 
+            conn.commit()
+
+    except Error as error:
+        print(error)
+        
+    finally:
+        cursor.close()
+        conn.close()
+        print ("connection closed.")   
+     
 
 if __name__ == "__main__":
     application.run(host='0.0.0.0')
