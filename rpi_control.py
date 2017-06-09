@@ -19,6 +19,7 @@ import sys
 import os
 import logging
 import time
+import collections
 
 from flask import abort 
 from mysql.connector import MySQLConnection, Error
@@ -117,8 +118,10 @@ def logout():
 @application.route("/controlpage")
 def hello():
     first_name="Shailendra"
-    home_appliance_state = get_appliance_state(first_name) 
-    return render_template("control_page.html" ,user = json.dumps(home_appliance_state))
+    home_appliance_state = get_appliance_state(first_name)
+    serial_number = "test001" 
+    sensor_data_web = query_sensor_data(serial_number) 
+    return render_template("control_page.html" ,user = json.dumps(home_appliance_state), user_1 = json.dumps(sensor_data_web))
 
 @application.route('/tubelightstate',methods = ['GET','POST'])
 def tubelightstate():
@@ -506,7 +509,7 @@ def sensor_data():
         #@todo - Save the data in a Time series database but as of now, just save the same in a Mysql databse. 
         #Need to see the impact on the performance  
         create_sensor_data_table()
-        sensor_data_dict1 =query_sensor_data(serial_number)
+        sensor_data_dict1 = query_sensor_data(serial_number)
         #this function need not to be here. Basically in the starting of running this program
         #a script need to be aded which will create all these tables
         insert_sensor_data(first_name, data_1,serial_number,time_stamp)
@@ -603,9 +606,15 @@ def  query_sensor_data(serial_number):
         if rows_count > 0:
             logger.info("There are rows in the table - not empty")
             result_set = cursor.fetchall()
+            objects_list = []
             for rows in result_set:
+                d = collections.OrderedDict()
+                d['temperature'] = rows[0]
+                d['time_stamp'] = rows[1]
                 temperature = rows[0]
                 time_stamp_1 = rows[1]
+                objects_list.append(d)
+            logger.info("Object List is %s", objects_list)
             return result_set
         else:
             return 0
