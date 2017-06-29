@@ -1,40 +1,24 @@
-import mosquitto, os, urlparse
+import paho.mqtt.client as paho
 import time
+ 
+def on_publish(client, userdata, mid):
+    print("mid: "+str(mid))
+ 
+client = paho.Client()
+client.on_publish = on_publish
+client.connect("broker.mqttdashboard.com", 1883)
+client.loop_start()
 
-def on_connect(mosq, obj, rc):
-    print("rc: " + str(rc))
-
-def on_message(mosq, obj, msg):
-    print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
-
-def on_publish(mosq, obj, mid):
-    print("mid: " + str(mid))
-
-def on_subscribe(mosq, obj, mid, granted_qos):
-    print("Subscribed: " + str(mid) + " " + str(granted_qos))
-
-def on_log(mosq, obj, level, string):
-    print(string)
-
-mqttc = mosquitto.Mosquitto()
-mqttc.on_message = on_message
-mqttc.on_connect = on_connect
-mqttc.on_publish = on_publish
-
-
-url_str = os.environ.get('m11.cloudmqtt:10167', 'mqtt://localhost:1883')
-url = urlparse.urlparse(url_str)
 
 
 def my_mqtt_publish(topic, payload):
-    mqttc.username_pw_set("<username>", "<password>")
-    mqttc.connect(url.hostname, url.port)
     try:
-        mqttc.publish(topic, payload)
+        client.publish(topic, payload, qos=1)
         print "going to publish topic : {0} and payload {1}".format(topic,payload)
     except Exception as e:
         print e.args, e.message
 
-
-
-
+#while True:
+ #   temperature = 23 
+  #  (rc, mid) = client.publish(, str(temperature), qos=1)
+   # time.sleep(1)
