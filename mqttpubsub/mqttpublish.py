@@ -1,3 +1,6 @@
+# this code is on the lowest level .Hadn't added any error handling. Need to improve this in future
+# See this link and add other methods https://github.com/eclipse/paho.mqtt.python#single
+
 import paho.mqtt.client as paho
 import time
 import paho.mqtt.publish as publish
