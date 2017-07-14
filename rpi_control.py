@@ -20,6 +20,7 @@ import os
 import logging
 import time
 import collections
+import thread
 
 from flask import abort 
 from mysql.connector import MySQLConnection, Error
@@ -34,7 +35,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # create a file handler
-handler = logging.FileHandler('/home/shailendra/test.log')
+handler = logging.FileHandler('/root/rpidemo/log/test.log')
 handler.setLevel(logging.DEBUG)
 
 # create a logging format
@@ -306,7 +307,7 @@ def save_coffeem_state(coffeem_state_1, first_name):
     finally:
         cursor.close()
         conn.close()
-        loggger.info("Connection closed for save_coffeem_state function")
+        logger.info("Connection closed for save_coffeem_state function")
 
 def save_switch1_state(switch1_state_1, first_name):
     logger.info("Inside  save_switch1_state function")
@@ -404,7 +405,7 @@ def if_merchant_exist(email_id, contact_number):
             logger.info("connection fialed with DB")
         
         cursor = conn.cursor(buffered=True)
-        query ="""SELECT * FROM merchant_registration_table WHERE email_id = %s OR contact_number = %s""" 
+        query ="""SELECT * FROM USER_DATA WHERE EMAIL_ID = %s OR CONTACT_NUMBER = %s""" 
         cursor.execute(query, (email_id,contact_number))
         rows_count = cursor.rowcount
         #print rows_count
@@ -447,7 +448,7 @@ def verify_user(email_id, password):
             print('connection failed.')
         
         cursor = conn.cursor(buffered=True)
-        query ="""SELECT * FROM merchant_registration_table WHERE email_id = %s""" 
+        query ="""SELECT * FROM USER_DATA WHERE EMAIL_ID = %s""" 
         cursor.execute(query, (email_id,))
         rows_count = cursor.rowcount
         #print "printing rows count"
@@ -456,7 +457,7 @@ def verify_user(email_id, password):
             logger.info("There are rows in the table - not empty")
             result_set = cursor.fetchall()
             for row in result_set:
-                entered_password = row[3]
+                entered_password = row[4]
                 logger.debug('entered password is : %s',password)
                 if str(entered_password) == password:
                     logger.debug("password matched")
@@ -507,7 +508,7 @@ def sensor_data():
         time_stamp = time.time()
         print data_1
         #@todo - Save the data in a Time series database but as of now, just save the same in a Mysql databse. 
-        #Need to see the impact on the performance  
+        #Need to see the impact on the prformance  
         create_sensor_data_table()
         sensor_data_dict1 = query_sensor_data(serial_number)
         #this function need not to be here. Basically in the starting of running this program
@@ -611,10 +612,10 @@ def  query_sensor_data(serial_number):
                 d = collections.OrderedDict()
                 d['temperature'] = rows[0]
                 d['time_stamp'] = rows[1]
-                temperature = rows[0]
-                time_stamp_1 = rows[1]
+                #temperature = rows[0]
+                #time_stamp_1 = rows[1]
                 objects_list.append(d)
-            logger.info("Object List is %s", objects_list)
+            #logger.info("Object List is %s", objects_list)
             return result_set
         else:
             return 0
