@@ -1,4 +1,4 @@
-# rpi home control - A small end-to-end DIY project (more information on my blog [LINK] (http://shail1501.blogspot.in/))
+# rpi home control - A small end-to-end DIY project (more information on my blog [LINK](http://shail1501.blogspot.in/))
 Home Automation using RPI. One of the best use cases of IOT(Internet of Things). This is one of the projects fro my wishlist. The main functionality of this project is that its a end-to-end solution which include following components
 
 1. Hardware 
@@ -19,7 +19,7 @@ Home Automation using RPI. One of the best use cases of IOT(Internet of Things).
 2. Web -application 
     1. Digital Ocean as server provider 
     2. Python 
-    3. Flask - didn't used most the features, but it seems to be a good python framework to start with [LINK] (http://flask.pocoo.org/)
+    3. Flask - didn't used most the features, but it seems to be a good python framework to start with [LINK](http://flask.pocoo.org/)
     4. Nginx 
     5. Jinja2 as a templating engine
     6. Mysql 
