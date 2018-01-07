@@ -9,8 +9,8 @@ while 1:
         url = 'http://127.0.0.1:8000/rpi/apitest/v1.0/task_sensor_data?data={0}'.format(sensor_value)
         res = requests.post(url)
         print res.text
-        time.sleep(60)
+        time.sleep(10)
     except requests.ConnectionError:
         print "Server is not up"
-        time.sleep(60)
+        time.sleep(10)
         #@todo - Send mail or message to the Admin

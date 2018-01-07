@@ -35,7 +35,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # create a file handler
-handler = logging.FileHandler('/root/rpidemo/log/test.log')
+handler = logging.FileHandler('/home/shailendra/test_1.log')
 handler.setLevel(logging.DEBUG)
 
 # create a logging format

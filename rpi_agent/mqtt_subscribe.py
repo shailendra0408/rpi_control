@@ -33,7 +33,7 @@ mqttc.on_subscribe = on_subscribe
 url_str = os.environ.get('m11.cloudmqtt:10167', 'mqtt://localhost:1883')
 url = urlparse.urlparse(url_str)
 
-mqttc.username_pw_set("<username>", "<password>")
+mqttc.username_pw_set("wbjddnda", "oantKK07oLSg")
 mqttc.connect(url.hostname, url.port)
 
 data = mqttc.subscribe("appliance/state",0)
