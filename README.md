@@ -1,3 +1,4 @@
+# Very nascent code for controlling hme appliances via MQTT and a small web-app. Current working on the next version with improved features and REST api's, so that a android application canbe developed. 
 # rpi home control - A small end-to-end DIY project (more information on my blog [LINK](http://shail1501.blogspot.in/))
 Home Automation using RPI. One of the best use cases of IOT(Internet of Things). This is one of the projects fro my wishlist. The main functionality of this project is that its a end-to-end solution which include following components
 
